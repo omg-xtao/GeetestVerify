@@ -8,7 +8,6 @@ from route.login import router as login_router
 from route.templates import templates
 
 app = FastAPI()
-client = httpx.AsyncClient()
 app.include_router(login_router)
 app.mount("/img", StaticFiles(directory="public/img"), name="img")
 app.mount("/js", StaticFiles(directory="public/js"), name="js")
@@ -93,4 +92,5 @@ class JSResponse(PlainTextResponse):
 
 @app.get("/telegram-web-app.js", response_class=JSResponse)
 async def get_telegram_web_js():
-    return (await client.get("https://telegram.org/js/telegram-web-app.js")).text
+    async with httpx.AsyncClient() as client:
+        return (await client.get("https://telegram.org/js/telegram-web-app.js")).text
