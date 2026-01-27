@@ -7,10 +7,12 @@ from fastapi.staticfiles import StaticFiles
 from route.login import router as login_router
 from route.templates import templates
 
+DEBUG = False
 app = FastAPI()
 app.include_router(login_router)
-app.mount("/img", StaticFiles(directory="public/img"), name="img")
-app.mount("/js", StaticFiles(directory="public/js"), name="js")
+if DEBUG:
+    app.mount("/img", StaticFiles(directory="public/img"), name="img")
+    app.mount("/js", StaticFiles(directory="public/js"), name="js")
 
 
 @app.get("/", response_class=HTMLResponse)
